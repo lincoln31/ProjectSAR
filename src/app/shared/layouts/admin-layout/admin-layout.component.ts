@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu'; // <--- AÑADE ESTA LÍN
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-layout',
@@ -40,7 +41,10 @@ export class AdminLayoutComponent {
     { label: 'Control de Acceso', icon: 'security', route: '/app/access-control' },
   ];
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {} // Inyecta Router
+  goToDashboard(): void {
+    this.router.navigate(['/app/dashboard']);
+  }
 
   toggleSidenav(): void {
     this.isSidenavOpen = !this.isSidenavOpen;

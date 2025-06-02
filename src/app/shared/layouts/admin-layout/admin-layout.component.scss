@@ -38,3 +38,26 @@
       top: 56px; /* Altura del toolbar en móviles */
     }
   }
+  .app-toolbar { // Clase para el mat-toolbar
+    display: flex;
+    align-items: center;
+  }
+  .menu-button {
+    // Estilos para el botón de menú si necesitas ajustarlo
+  }
+  
+  .toolbar-logo {
+    height: 40px; // O la altura que desees, ej. 30px, 35px
+    width: auto;  // Para mantener la proporción
+    margin-left: 16px;
+    cursor: pointer;
+    display: block; // A veces ayuda con el layout de imágenes
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .user-menu-button {
+    // Estilos para el botón de menú de usuario
+  }

@@ -1,0 +1,140 @@
+// Importar funciones/mixins de Material si se usan
+// @use '@angular/material' as mat;
+
+:host {
+    display: block; // Permitir que ocupe el espacio en el layout
+    background-color: #f0f2f5; // Color de fondo del .main-content del mockup
+    padding: 20px; // Padding similar al .main-content del mockup
+    height: 100%;
+    overflow-y: auto; // Para scroll si el contenido es largo
+  }
+  
+  .page-container {
+    max-width: 950px;
+    margin: 0 auto; // Centrar el contenido principal
+  }
+  
+  .logo-header {
+    margin-bottom: 20px; // Espacio antes del formulario
+    .header-logo {
+      width: 100px; // Ajusta según necesites
+      height: auto;
+    }
+  }
+  
+  .form-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  .form-title {
+    font-size: 24px;
+    margin-bottom: 30px;
+    color: #0c1e5b;
+    font-weight: bold; // Añadido para consistencia
+  }
+  
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; // Espacio entre elementos en la fila
+    margin-bottom: 20px;
+  
+    &.submit-row {
+      justify-content: flex-end; // Alinea el botón a la derecha
+      margin-top: 30px;
+    }
+  }
+  
+  .form-group {
+    flex: 1; // Por defecto, los campos ocupan el espacio disponible
+    min-width: 200px; // Ancho mínimo para que no se encojan demasiado
+  
+    // Para que los mat-form-field ocupen todo el ancho del .form-group
+    ::ng-deep .mat-mdc-form-field {
+      width: 100%;
+    }
+  }
+  
+  .short-field {
+    flex-grow: 0; // No permitir que crezca más de su contenido
+    flex-basis: 150px; // Ancho base como en tu mockup (max-width)
+    max-width: 180px; // Un poco más de margen
+  }
+  
+  // Estilos para el grupo de Hora de Ingreso
+  .time-input-group {
+    display: flex;
+    flex-direction: column;
+  
+    .time-label-custom { // Etiqueta para "Hora de Ingreso"
+      display: block;
+      margin-bottom: 8px; // Similar a las etiquetas de mat-form-field
+      font-weight: bold;
+      color: #0c1e5b; // Color de tu mockup
+      font-size: 0.75em; // Tamaño similar al de Material cuando la etiqueta está arriba
+      // O puedes usar el estilo de label de Material:
+      // font-family: mat.get-theme-typography(mat.define-light-theme((), font-family));
+      // color: mat.get-theme-color(mat.define-light-theme((), foreground, secondary-text));
+    }
+  }
+  
+  .time-inputs-material {
+    display: flex;
+    align-items: center; // Alinear los campos de hora y el separador
+    gap: 8px;
+  
+    .time-field {
+      flex: 1; // Para que los campos de hora se distribuyan
+      min-width: 60px; // Ancho mínimo para HH y MM
+      max-width: 80px;
+    }
+  
+    .time-separator {
+      font-size: 1.5em;
+      color: #0c1e5b;
+      padding-bottom: 18px; // Para alinear con los inputs de Material
+    }
+  }
+  
+  // Estilos para el botón (tomados de tu mockup)
+  .btn {
+    background-color: #b4e4e9 !important;
+    color: #0c1e5b !important;
+    border: none;
+    padding: 10px 20px !important; // Mat-button tiene su propio padding
+    font-size: 16px !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+    font-weight: bold !important;
+    min-width: 150px; // Ancho mínimo para el botón
+    // width: 100%; // Si quieres que ocupe todo el .form-group donde está
+  
+    &:hover:not([disabled]) {
+      background-color: #9cd1d7 !important;
+    }
+  
+    &[disabled] {
+      background-color: #e0e0e0 !important;
+      color: #a0a0a0 !important;
+    }
+  
+    mat-progress-spinner {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+  
+  // Adaptar color de labels y bordes de mat-form-field si es necesario
+  // (similar a lo que hicimos en el login)
+  ::ng-deep .mat-mdc-form-field {
+    .mat-mdc-floating-label, // Etiqueta flotante
+    .mdc-floating-label { // Etiqueta cuando no está flotando
+      color: #0c1e5b;
+      font-weight: bold;
+    }
+  
+    // Puedes añadir más personalización para bordes, etc.
+  }

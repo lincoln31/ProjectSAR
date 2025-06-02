@@ -1,0 +1,123 @@
+
+
+:host {
+  display: block;
+  background-color: #f0f2f5;
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.page-container {
+  max-width: 1200px; // O el ancho que prefieras para el contenido
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.page-title {
+  font-size: 24px;
+  color: #0c1e5b;
+  font-weight: bold;
+}
+
+// Estilo para el botón de añadir, usando color primario de Material
+button[mat-raised-button][color="primary"] {
+  background-color: #0c1e5b; // Tu color primario
+  color: white;
+  &:hover {
+    background-color: lighten(#0c1e5b, 10%);
+  }
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.loading-indicator, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #555;
+  padding: 40px;
+  margin-top: 50px;
+
+  mat-progress-spinner {
+    margin-bottom: 20px;
+  }
+
+  .empty-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #a0a0a0;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+}
+
+.towers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+tower-card {
+    background-color: white;
+    transition: box-shadow 0.3s ease-in-out;
+  
+    &:hover {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    }
+  
+    mat-card-header {
+      // .mat-card-title { color: #0c1e5b; } // Si quieres forzar un color específico
+    }
+  
+    mat-card-content {
+      p {
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #333;
+        strong {
+          color: #0c1e5b;
+        }
+      }
+    }
+  
+    mat-card-actions {
+      padding: 8px 16px !important;
+  
+      // Los botones mat-icon-button con color="primary", color="accent", color="warn"
+      // ya deberían tomar los colores del tema configurado globalmente.
+      // No necesitas redefinir sus colores aquí a menos que quieras algo muy específico
+      // que el tema no te dé.
+  
+      // Si, por alguna razón, los colores del tema no se aplican automáticamente
+      // a los iconos dentro de los botones, podrías intentar esto (pero prueba sin esto primero):
+      /*
+      button[mat-icon-button] {
+        &.mat-primary .mat-icon { // Si el botón tiene la clase mat-primary
+          color: var(--mat-primary-main-color, tu-color-primario-fallback); // Ejemplo con variable CSS
+        }
+        &.mat-accent .mat-icon {
+          color: var(--mat-accent-main-color, tu-color-accent-fallback);
+        }
+        &.mat-warn .mat-icon {
+          color: var(--mat-warn-main-color, tu-color-warn-fallback);
+        }
+      }
+      */
+    }
+  }
+  

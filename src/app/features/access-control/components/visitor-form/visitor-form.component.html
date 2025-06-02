@@ -1,1 +1,91 @@
-<p>visitor-form works!</p>
+<div class="page-container"> <!-- Contenedor para aplicar padding similar al .main-content -->
+    <div class="logo-header"> <!-- Opcional: si quieres el logo pequeño arriba -->
+      <img src="assets/images/logo.jpg" alt="Logo" class="header-logo"/>
+    </div>
+  
+    <div class="form-container">
+      <h2 class="form-title">Registro de Visitas</h2>
+  
+      <form [formGroup]="visitorForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>Nombre Completo*</mat-label>
+            <input matInput formControlName="fullName" required>
+            <mat-error *ngIf="visitorForm.get('fullName')?.hasError('required')">
+              El nombre es requerido.
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>Teléfono*</mat-label>
+            <input matInput type="tel" formControlName="phone" required>
+            <mat-error *ngIf="visitorForm.get('phone')?.hasError('required')">
+              El teléfono es requerido.
+            </mat-error>
+            <!-- Puedes añadir validación de pattern aquí -->
+          </mat-form-field>
+        </div>
+  
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>Residente a quien visita</mat-label>
+            <input matInput formControlName="residentToVisit">
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-group short-field">
+            <mat-label>Torre*</mat-label>
+            <input matInput formControlName="tower" required>
+             <mat-error *ngIf="visitorForm.get('tower')?.hasError('required')">
+              La torre es requerida.
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-group short-field">
+            <mat-label># Apartamento</mat-label>
+            <input matInput formControlName="apartment">
+          </mat-form-field>
+        </div>
+  
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>Fecha de Ingreso*</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="entryDate" required readonly (click)="picker.open()">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="visitorForm.get('entryDate')?.hasError('required')">
+              La fecha es requerida.
+            </mat-error>
+          </mat-form-field>
+  
+          <div class="form-group time-input-group">
+            <label class="time-label-custom">Hora de Ingreso*</label>
+            <div class="time-inputs-material">
+              <mat-form-field appearance="outline" class="time-field">
+                <mat-label>HH</mat-label>
+                <input matInput type="number" formControlName="entryHour" min="0" max="23" placeholder="HH" required>
+                <mat-error *ngIf="visitorForm.get('entryHour')?.hasError('required')">Req.</mat-error>
+                <mat-error *ngIf="visitorForm.get('entryHour')?.hasError('min') || visitorForm.get('entryHour')?.hasError('max')">0-23</mat-error>
+              </mat-form-field>
+              <span class="time-separator">:</span>
+              <mat-form-field appearance="outline" class="time-field">
+                <mat-label>MM</mat-label>
+                <input matInput type="number" formControlName="entryMinute" min="0" max="59" placeholder="MM" required>
+                <mat-error *ngIf="visitorForm.get('entryMinute')?.hasError('required')">Req.</mat-error>
+                <mat-error *ngIf="visitorForm.get('entryMinute')?.hasError('min') || visitorForm.get('entryMinute')?.hasError('max')">0-59</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-row submit-row">
+          <button mat-raised-button
+                  type="submit"
+                  class="btn"
+                  [disabled]="visitorForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Guardar</span>
+            <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

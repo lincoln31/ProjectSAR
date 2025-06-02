@@ -1,1 +1,48 @@
-<p>property-list works!</p>
+<div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title">Gestión de Propiedades</h1>
+      <button mat-raised-button color="primary" (click)="goToAddTower()">
+        <mat-icon>add_circle_outline</mat-icon>
+        Añadir Torre
+      </button>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading-indicator">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+      <p>Cargando propiedades...</p>
+    </div>
+  
+    <div *ngIf="!isLoading && towers.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">domain_disabled</mat-icon>
+      <p>No hay torres registradas.</p>
+      <p>Comienza añadiendo una nueva torre.</p>
+    </div>
+  
+    <div class="towers-grid" *ngIf="!isLoading && towers.length > 0">
+      <mat-card class="tower-card" *ngFor="let tower of towers">
+        <mat-card-header>
+          <mat-card-title>{{ tower.name }}</mat-card-title>
+          <mat-card-subtitle>Identificador: {{ tower.identifier || 'N/A' }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Dirección:</strong> {{ tower.address || 'No especificada' }}</p>
+          <p><strong>Número de Apartamentos:</strong> {{ tower.numberOfApartments || 0 }}</p>
+          <!-- Podrías añadir más detalles aquí -->
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-icon-button color="primary" (click)="viewApartments(tower.id)" matTooltip="Ver Apartamentos">
+            <mat-icon>apartment</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="editTower(tower.id)" matTooltip="Editar Torre">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteTower(tower.id, tower.name)" matTooltip="Eliminar Torre">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  
+    <!-- Aquí podríamos tener otra sección para listar apartamentos si se seleccionó una torre,
+         o la navegación a `viewApartments` podría llevar a otra ruta/componente -->
+  </div>

@@ -1,1 +1,36 @@
-<p>tower-form works!</p>
+<div class="page-container form-view-container">
+    <div class="form-container-actual">
+      <h2 class="form-title">{{ isEditMode ? 'Editar Torre' : 'Nueva Torre' }}</h2>
+  
+      <form [formGroup]="towerForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre de la Torre*</mat-label>
+          <input matInput formControlName="name" required>
+          <mat-error *ngIf="towerForm.get('name')?.hasError('required')">El nombre es requerido.</mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Identificador (Ej: A, Bloque 1)</mat-label>
+          <input matInput formControlName="identifier">
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dirección</mat-label>
+          <textarea matInput formControlName="address" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5"></textarea>
+        </mat-form-field>
+  
+        <!-- Podrías añadir más campos como número de pisos, etc. -->
+  
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="onCancel()">Cancelar</button>
+          <button mat-raised-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="towerForm.invalid || isLoading">
+            <span *ngIf="!isLoading">{{ isEditMode ? 'Guardar Cambios' : 'Crear Torre' }}</span>
+            <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
