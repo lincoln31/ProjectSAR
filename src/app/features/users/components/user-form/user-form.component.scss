@@ -1,0 +1,116 @@
+// Importar el tema si necesitas variables de Material
+// @use '@angular/material' as mat;
+
+:host {
+    display: block;
+    padding: 20px;
+    background-color: #e5ebeb; // Color de fondo de la página de tu mockup
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto; // Permitir scroll si el formulario es largo
+  }
+  
+  .user-form-page-container {
+    max-width: 1000px; // Como en tu mockup
+    margin: 0 auto;
+  }
+  
+  .page-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  
+    h1 {
+      font-size: 1.8rem; // Ajustar si es necesario
+      color: #0a1351;
+      font-weight: bold;
+      margin: 0;
+    }
+  
+    .back-button {
+      // Estilos para el botón de volver
+      // color: #0a1351;
+      // border-color: #0a1351;
+    }
+  }
+  
+  .form-card {
+    // MatCard ya tiene su propio padding, pero se puede ajustar si es necesario
+    // padding: 20px;
+  }
+  
+  .form-row {
+    display: flex;
+    flex-wrap: wrap; // Para que los campos se ajusten en pantallas pequeñas
+    gap: 20px; // Espacio entre grupos de formulario en la misma fila
+    margin-bottom: 5px; // Espacio vertical entre filas (mat-form-field ya tiene margen inferior)
+  }
+  
+  .form-group {
+    flex: 1; // Por defecto, los grupos ocupan el espacio disponible
+    min-width: calc(50% - 10px); // Para que dos campos ocupen la fila, considerando el gap
+  
+    &.small { // Para campos más pequeños como Torre/Apartamento
+      flex: 0 1 200px; // No crecer, base de 200px, puede encogerse
+      min-width: 150px;
+    }
+  
+    // Para el label de Material Radio Group
+    .mat-label {
+      display: block;
+      margin-bottom: 8px;
+      color: rgba(0,0,0,.6); // Color de label de Material
+      font-size: 0.75em; // Tamaño de label de Material
+      font-weight: normal; // Ajustar si quieres el label de radio más bold
+    }
+  }
+  
+  // Ajustar el mat-form-field para que ocupe todo el ancho dentro de .form-group
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+  
+  .gender-options-mat {
+    display: flex;
+    gap: 20px; // Espacio entre radio buttons
+    margin-top: 8px; // Espacio después del label
+    padding-bottom: 15px; // Para alinear con el margen inferior de mat-form-field
+  }
+  
+  .radio-button-mat {
+    // Estilos adicionales para los radio buttons si son necesarios
+  }
+  
+  .button-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end; // Alinear botones a la derecha
+    gap: 15px; // Espacio entre botones
+  }
+  
+  .submit-button-mat, .cancel-button {
+    min-width: 120px; // Ancho mínimo para los botones
+  }
+  
+  .submit-button-mat {
+    // Estilos para el botón principal si los de Material no son suficientes
+    // background-color: #d3eaef;
+    // color: #0a1351;
+  }
+  
+  .submit-spinner {
+    // Centrado por el flex del botón
+  }
+  
+  // Media query para apilar campos en pantallas pequeñas
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+      gap: 0; // Quitar gap horizontal si se apilan
+    }
+    .form-group, .form-group.small {
+      min-width: 100%; // Ocupar todo el ancho
+      margin-bottom: 15px; // Espacio entre campos apilados
+    }
+  }

@@ -1,0 +1,44 @@
+<div class="login-page-wrapper"> <!-- Nuevo wrapper para centrar -->
+    <div class="login-container">
+      <div class="logo-section">
+        <img src="assets/images/logo.jpg" alt="Logo Empresa" class="logo"/>
+        <!-- Puedes añadir el nombre de la marca y eslogan si lo deseas aquí,
+             ya que tu CSS los tiene definidos (.brand-name, .slogan) -->
+        <h1 class="brand-name">REAL ESTATE</h1> <!-- Ejemplo -->
+        <p class="slogan">Tu solución integral de administración</p> <!-- Ejemplo -->
+      </div>
+  
+      <div class="form-section">
+        <h2 class="login-title">LOGIN</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form-actual">
+          <mat-form-field appearance="outline" class="full-width-field">
+            <mat-label>Usuario</mat-label>
+            <input matInput formControlName="username" id="username" required>
+            <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+              El usuario es requerido
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="full-width-field">
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" formControlName="password" id="password" required>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+              La contraseña es requerida
+            </mat-error>
+          </mat-form-field>
+  
+          <button mat-raised-button
+                  type="submit"
+                  class="submit-btn"
+                  [disabled]="loginForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Entrar</span>
+            <mat-progress-spinner *ngIf="isLoading"
+                                  mode="indeterminate"
+                                  diameter="24"
+                                  class="submit-spinner">
+            </mat-progress-spinner>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>

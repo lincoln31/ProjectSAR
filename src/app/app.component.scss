@@ -1,0 +1,23 @@
+// src/styles.scss
+
+// ... tus otros estilos globales ...
+
+// Estilos para MatSnackBar
+.success-snackbar {
+    background-color: #4CAF50; // Verde
+    color: white;
+  }
+  
+  .error-snackbar {
+    background-color: #f44336; // Rojo
+    color: white;
+  }
+  
+  // Asegúrate de que los botones dentro del snackbar también sean visibles
+  .success-snackbar button, .error-snackbar button {
+    color: white !important;
+    opacity: 0.8;
+  }
+  .success-snackbar button:hover, .error-snackbar button:hover {
+    opacity: 1;
+  }

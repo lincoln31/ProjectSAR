@@ -1,0 +1,157 @@
+// Importar el tema de Angular Material para usar sus variables y mixins si es necesario
+// @use '@angular/material' as mat; // Descomentar si usas funciones/mixins de Material
+
+// Estilos del wrapper para centrar el contenido como en tu body original
+:host { // Aplica estilos al elemento host del componente (<app-login>)
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // O 100% si está dentro de otro contenedor con altura definida
+  width: 100%;
+  background-color: #f0f5f5; // Color de fondo de la página
+}
+
+.login-page-wrapper { // Este es el nuevo wrapper
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.login-container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 600px; // Usar min-height para que pueda crecer si es necesario
+  background-color: #f0f5f5; // El mockup lo tiene, pero el wrapper ya lo podría tener
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.logo-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background-color: #f0f5f5; // Mismo color que el fondo general
+}
+
+.logo {
+  width: 200px; // Ajusta según tu logo
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.brand-name {
+  font-size: 36px;
+  color: #5a8a9e;
+  text-align: center;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+.slogan {
+  color: #5a8a9e;
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.form-section {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #f0f5f5; // Mismo color
+}
+
+.login-title {
+  color: #0e1560;
+  font-size: 48px;
+  margin-bottom: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+
+// Estilos para los campos de formulario de Angular Material
+.login-form-actual {
+  width: 100%;
+}
+
+.full-width-field {
+  width: 100%;
+  margin-bottom: 20px; // Espacio entre campos
+
+  // Para que la etiqueta y el input tengan el color de tu diseño
+  ::ng-deep .mat-mdc-form-field-label, // Para la etiqueta flotante y normal
+  ::ng-deep .mat-mdc-text-field-wrapper, // Para el borde
+  ::ng-deep input.mat-mdc-input-element {
+    color: #0e1560; // Color del texto del label y del input
+  }
+  ::ng-deep .mat-mdc-form-field-label { // Específicamente para el label
+     font-weight: bold;
+     font-size: 18px; // Tamaño del label original
+  }
+
+  // Para el borde del campo cuando está enfocado (outline)
+  // ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline-thick {
+  //   border-color: #5a8a9e !important; // Puedes usar un color de acento
+  // }
+}
+
+
+.submit-btn {
+  background-color: #d3eaef !important; // !important para sobreescribir Material si es necesario
+  color: #0e1560 !important;
+  border: none;
+  padding: 15px 0 !important; // Ajustar padding para mat-raised-button
+  width: 100%;
+  border-radius: 4px !important;
+  cursor: pointer;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  margin-top: 20px !important;
+  height: 56px; // Para alinear con la altura de los form-fields outline
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover:not([disabled]) {
+    background-color: #b9dfe6 !important;
+  }
+
+  &[disabled] {
+    background-color: #e0e0e0 !important; // Color para botón deshabilitado
+    color: #a0a0a0 !important;
+    cursor: not-allowed;
+  }
+}
+
+
+
+
+/* Media Query */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    height: auto; // Permitir que crezca
+    max-width: 90%;
+    margin: 20px 0; // Margen para que no pegue a los bordes
+  }
+
+  .logo-section, .form-section {
+    padding: 30px;
+    flex-basis: auto; // Resetear flex-basis
+  }
+
+  .login-title {
+    font-size: 36px;
+    margin-bottom: 30px;
+  }
+}

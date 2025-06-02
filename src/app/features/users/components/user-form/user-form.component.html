@@ -1,0 +1,112 @@
+<div class="user-form-page-container">
+    <div class="page-header-custom"> <!-- Similar al de la lista, pero centrado o como prefieras -->
+      <h1>{{ isEditMode ? 'Editar Residente' : 'Registro de Residentes' }}</h1>
+      <!-- Botón de Volver (opcional) -->
+      <button mat-stroked-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Listado
+      </button>
+    </div>
+  
+    <mat-card class="form-card mat-elevation-z4">
+      <mat-card-content>
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Nombres</mat-label>
+              <input matInput formControlName="firstName" required>
+              <mat-error *ngIf="userForm.get('firstName')?.hasError('required')">
+                Los nombres son requeridos.
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Apellidos</mat-label>
+              <input matInput formControlName="lastName" required>
+              <mat-error *ngIf="userForm.get('lastName')?.hasError('required')">
+                Los apellidos son requeridos.
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Cédula</mat-label>
+              <input matInput formControlName="idCard" required>
+              <mat-error *ngIf="userForm.get('idCard')?.hasError('required')">
+                La cédula es requerida.
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="form-group small">
+              <mat-label>Torre</mat-label>
+              <input matInput formControlName="tower" required>
+              <!-- Podríamos usar un mat-select si las torres son predefinidas -->
+              <mat-error *ngIf="userForm.get('tower')?.hasError('required')">
+                La torre es requerida.
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="form-group small">
+              <mat-label># Apartamento</mat-label>
+              <input matInput formControlName="apartment">
+              <!-- Podríamos usar un mat-select si los apartamentos son predefinidos por torre -->
+            </mat-form-field>
+          </div>
+  
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Correo Electrónico</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="ejemplo@gmail.com">
+              <mat-error *ngIf="userForm.get('email')?.hasError('email')">
+                Por favor, ingrese un correo válido.
+              </mat-error>
+            </mat-form-field>
+  
+            <div class="form-group"> <!-- Contenedor para el radio group -->
+              <label id="gender-radio-group-label" class="mat-label">Género</label>
+              <mat-radio-group aria-labelledby="gender-radio-group-label" class="gender-options-mat" formControlName="gender">
+                <mat-radio-button value="masculino" class="radio-button-mat">Masculino</mat-radio-button>
+                <mat-radio-button value="femenino" class="radio-button-mat">Femenino</mat-radio-button>
+                <mat-radio-button value="otro" class="radio-button-mat">Otro</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+  
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Fecha de Nacimiento</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly>
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="userForm.get('birthDate')?.hasError('required') && (userForm.get('birthDate')?.touched || userForm.get('birthDate')?.dirty)">
+                  La fecha de nacimiento es requerida.
+              </mat-error>
+            </mat-form-field>
+  
+            <!-- Puedes añadir más campos aquí si son necesarios, como "Rol" -->
+            <mat-form-field appearance="outline" class="form-group" *ngIf="availableRoles.length > 0">
+              <mat-label>Rol</mat-label>
+              <mat-select formControlName="role">
+                <mat-option *ngFor="let role of availableRoles" [value]="role.value">
+                  {{role.viewValue}}
+                </mat-option>
+              </mat-select>
+               <mat-error *ngIf="userForm.get('role')?.hasError('required')">
+                El rol es requerido.
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="button-container">
+            <button mat-stroked-button type="button" (click)="onCancel()" class="cancel-button">Cancelar</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid || isLoading" class="submit-button-mat">
+              <span *ngIf="!isLoading">{{ isEditMode ? 'Actualizar' : 'Guardar' }}</span>
+              <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24" class="submit-spinner"></mat-progress-spinner>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>

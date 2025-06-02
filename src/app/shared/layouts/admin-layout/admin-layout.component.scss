@@ -1,0 +1,40 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 64px; /* Altura del toolbar */
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .app-sidenav {
+    width: 240px; // Ancho del sidenav
+    border-right: 1px solid rgba(0,0,0,.12);
+  }
+  
+  .app-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px; // Espaciado interno para el contenido
+    overflow-y: auto; // Scroll si el contenido es muy largo
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .active-list-item {
+    // background-color: rgba(0, 0, 0, 0.04); // Estilo para el ítem activo
+    color: var(--mat-sidenav-item-active-text-color, var(--mat-primary-color, #3f51b5)) !important; /* Usar variables de Material si es posible */
+    font-weight: bold;
+    border-left: 3px solid var(--mat-primary-color, #3f51b5);
+  }
+  
+  // Ajustes para toolbar en pantallas pequeñas si es necesario
+  @media (max-width: 599px) {
+    .app-container {
+      top: 56px; /* Altura del toolbar en móviles */
+    }
+  }

@@ -1,0 +1,95 @@
+// Importar el tema si necesitas variables de Material
+// @use '@angular/material' as mat;
+
+:host {
+    display: block;
+    padding: 20px; // Similar al padding de tu .content
+    background-color: #f5f5f5; // Color de fondo de la página de tu mockup
+    height: 100%; // Para que ocupe el espacio
+    box-sizing: border-box;
+  }
+  
+  .user-list-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; // Era 30px
+  
+    h1 {
+      color: #0a1659; // Color de tu mockup
+      margin-bottom: 0; // Ajustado porque está en un flex container
+      font-size: 1.8rem; // Ajustar tamaño si es necesario
+    }
+  
+    button {
+      // El botón de Material ya tiene estilos, pero puedes ajustar si es necesario
+      // background-color: #0a1659;
+      // color: white;
+    }
+  }
+  
+  .search-field {
+    width: 100%;
+    max-width: 400px; // O el ancho que prefieras
+    margin-bottom: 20px;
+  
+    // Para ajustar el color del borde y label si es necesario, similar al login
+    // ::ng-deep .mat-mdc-form-field-label {
+    //   color: #0a1659;
+    // }
+    // ::ng-deep .mat-mdc-text-field-wrapper {
+    //   border-color: #ddd;
+    // }
+  }
+  
+  .table-container {
+    flex-grow: 1; // Para que la tabla ocupe el espacio restante
+    overflow: auto; // Para scroll si la tabla es muy ancha/larga
+    border-radius: 5px; // Como en tu mockup
+    // background-color: white; // MatTable ya tiene su fondo, pero se puede forzar
+  }
+  
+  .user-table {
+    width: 100%;
+    // box-shadow: 0 1px 3px rgba(0,0,0,0.1); // Ya se aplica con mat-elevation-z4 en el container
+  
+    .mat-mdc-header-cell {
+      background-color: #f9fafb; // Color de tu mockup para th
+      color: #4b5563; // Color de tu mockup para th text
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+  
+    .mat-mdc-cell {
+      padding: 12px 15px; // Similar a tu padding
+      border-bottom: 1px solid #ddd; // Color de tu mockup
+      font-size: 0.9em;
+    }
+  
+    // Para que el hover de la fila sea sutil
+   
+  }
+  
+  .action-buttons-cell {
+    // display: flex; // MatCell ya es flex si los botones están directos
+    // gap: 10px; // Los mat-icon-button ya tienen algo de margen
+    text-align: right; // Alinear botones a la derecha de la celda
+    white-space: nowrap; // Evitar que los botones se envuelvan
+  }
+  
+  // Estilos para cuando no hay datos
+  .mat-row .mat-cell.no-data-cell {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-style: italic;
+  }
+  
+  
