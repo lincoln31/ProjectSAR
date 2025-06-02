@@ -1,1 +1,116 @@
-<p>payment-form works!</p>
+<div class="payment-form-page-container">
+    <div class="page-header">
+      <!-- Opcional: Si quieres el logo aquí también -->
+      <!-- <img src="assets/images/logo.jpg" alt="Logo" class="header-logo"/> -->
+      <h1>Registro Pago Administración</h1>
+    </div>
+  
+    <div class="form-container-card">
+      <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+        <!-- Sección de Búsqueda de Residente -->
+        <div class="search-resident-section">
+          <mat-form-field appearance="outline" class="cedula-search-field">
+            <mat-label>Buscar Residente por Cédula</mat-label>
+            <input matInput #cedulaInput placeholder="Ingrese Cédula y presione Enter"
+                   (keyup.enter)="searchResidentByCedula(cedulaInput.value)">
+            <button mat-icon-button matSuffix type="button" (click)="searchResidentByCedula(cedulaInput.value)"
+                    aria-label="Buscar residente">
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-progress-bar mode="indeterminate" *ngIf="isSearchingResident"></mat-progress-bar>
+        </div>
+  
+        <mat-divider class="section-divider"></mat-divider>
+  
+        <h2>Datos del Residente</h2>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nombres</mat-label>
+            <input matInput formControlName="nombres" required readonly>
+            <mat-error *ngIf="paymentForm.get('nombres')?.hasError('required')">Nombres son requeridos</mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Apellidos</mat-label>
+            <input matInput formControlName="apellidos" required readonly>
+            <mat-error *ngIf="paymentForm.get('apellidos')?.hasError('required')">Apellidos son requeridos</mat-error>
+          </mat-form-field>
+        </div>
+  
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Cédula</mat-label>
+            <input matInput formControlName="cedula" required readonly>
+            <mat-error *ngIf="paymentForm.get('cedula')?.hasError('required')">Cédula es requerida</mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-field small-field">
+            <mat-label>Torre</mat-label>
+            <input matInput formControlName="torre" readonly>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-field small-field">
+            <mat-label># Apartamento</mat-label>
+            <input matInput formControlName="apartamento" readonly>
+          </mat-form-field>
+        </div>
+  
+        <mat-form-field appearance="outline" class="full-width-field">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput type="email" formControlName="correoElectronico" readonly>
+        </mat-form-field>
+  
+        <mat-divider class="section-divider"></mat-divider>
+  
+        <h2>Detalles del Pago</h2>
+  
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Monto del Pago *</mat-label>
+            <input matInput type="number" formControlName="monto" placeholder="0.00" required>
+            <span matTextPrefix>$ </span>
+            <mat-error *ngIf="paymentForm.get('monto')?.hasError('required')">El monto es requerido</mat-error>
+            <mat-error *ngIf="paymentForm.get('monto')?.hasError('min')">El monto debe ser positivo</mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Fecha de Pago *</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fechaPago" required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="paymentForm.get('fechaPago')?.hasError('required')">Fecha de pago es requerida</mat-error>
+          </mat-form-field>
+        </div>
+  
+        <div class="form-group"> <!-- Mantengo form-group para el label de radio -->
+          <label class="form-label">Método de Pago *</label>
+          <mat-radio-group formControlName="metodoPago" class="radio-group-material" required>
+            <mat-radio-button value="efectivo" class="radio-option-material">Efectivo</mat-radio-button>
+            <mat-radio-button value="transferencia" class="radio-option-material">Transferencia bancaria</mat-radio-button>
+          </mat-radio-group>
+          <mat-error *ngIf="paymentForm.get('metodoPago')?.touched && paymentForm.get('metodoPago')?.hasError('required')">
+            Seleccione un método de pago
+          </mat-error>
+        </div>
+  
+        <mat-form-field appearance="outline" class="full-width-field">
+          <mat-label>Referencia / Comprobante (Opcional)</mat-label>
+          <input matInput formControlName="referenciaPago" placeholder="Ej: Nro. de transacción, Nequi...">
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width-field">
+          <mat-label>Observaciones (Opcional)</mat-label>
+          <textarea matInput formControlName="observaciones" rows="3"></textarea>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary"
+                type="submit"
+                class="save-btn-material"
+                [disabled]="paymentForm.invalid || isSaving">
+          <span *ngIf="!isSaving">Guardar Pago</span>
+          <mat-progress-spinner *ngIf="isSaving" mode="indeterminate" diameter="24"></mat-progress-spinner>
+        </button>
+      </form>
+    </div>
+  </div>
