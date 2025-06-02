@@ -1,1 +1,150 @@
-<p>vehicle-form works!</p>
+<!-- src/app/features/vehicles/components/vehicle-form/vehicle-form.component.html -->
+
+<div class="vehicle-form-page-container">
+    <div class="page-header-custom">
+      <h1>{{ isEditMode ? 'Editar Vehículo' : 'Registro de Vehículo de Residente' }}</h1>
+      <button mat-stroked-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al Listado
+      </button>
+    </div>
+  
+    <mat-card class="form-card mat-elevation-z4">
+      <mat-card-content>
+        <!-- Sección de búsqueda de residente (AHORA ACTIVA) -->
+        <div class="resident-search-section" *ngIf="!isEditMode && !residentFound">
+          <mat-form-field appearance="outline" class="search-cedula-field">
+            <mat-label>Buscar Residente por Cédula</mat-label>
+            <input matInput #cedulaSearchInput 
+                   (keyup.enter)="findResidentByCedula(cedulaSearchInput.value)"
+                   placeholder="Ingrese cédula y presione Enter">
+            <button mat-icon-button matSuffix 
+                    (click)="findResidentByCedula(cedulaSearchInput.value)" 
+                    aria-label="Buscar cédula"
+                    [disabled]="isLoadingResident">
+              <mat-icon *ngIf="!isLoadingResident">search</mat-icon>
+              <mat-progress-spinner *ngIf="isLoadingResident" mode="indeterminate" diameter="20"></mat-progress-spinner>
+            </button>
+          </mat-form-field>
+          <button mat-stroked-button (click)="resetResidentSearch()" *ngIf="residentSearched && !residentFound" class="try-again-button">
+              Intentar de nuevo
+          </button>
+        </div>
+  
+        <div *ngIf="residentFound && !isEditMode" class="found-resident-info">
+          <h4>Residente Encontrado:</h4>
+          <p><strong>Nombre:</strong> {{ vehicleForm.get('ownerFirstName')?.value }} {{ vehicleForm.get('ownerLastName')?.value }}</p>
+          <p><strong>Cédula:</strong> {{ vehicleForm.get('ownerIdCard')?.value }}</p>
+          <p><strong>Torre/Apto:</strong> {{ vehicleForm.get('tower')?.value }} / {{ vehicleForm.get('apartment')?.value || 'N/A' }}</p>
+          <button mat-stroked-button (click)="resetResidentSearch()" color="warn" class="change-resident-button">
+              Cambiar Residente
+          </button>
+          <mat-divider></mat-divider>
+        </div>
+  
+  
+        <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+          <!-- Datos del Residente: Se llenarán con la búsqueda o serán editables si no se busca / modo edición -->
+          <h3 class="form-section-title" *ngIf="!residentFound || isEditMode">Datos del Residente</h3>
+          <div class="form-row" *ngIf="!residentFound || isEditMode">
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Nombres del Residente</mat-label>
+              <input matInput formControlName="ownerFirstName" required [readonly]="residentFound && !isEditMode">
+              <mat-error *ngIf="vehicleForm.get('ownerFirstName')?.hasError('required')">Nombres requeridos.</mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Apellidos del Residente</mat-label>
+              <input matInput formControlName="ownerLastName" required [readonly]="residentFound && !isEditMode">
+              <mat-error *ngIf="vehicleForm.get('ownerLastName')?.hasError('required')">Apellidos requeridos.</mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="form-row" *ngIf="!residentFound || isEditMode">
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Cédula del Residente</mat-label>
+              <input matInput formControlName="ownerIdCard" required [readonly]="residentFound && !isEditMode">
+              <mat-error *ngIf="vehicleForm.get('ownerIdCard')?.hasError('required')">Cédula requerida.</mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="form-group short-field">
+              <mat-label>Torre</mat-label>
+              <input matInput formControlName="tower" required [readonly]="residentFound && !isEditMode">
+              <mat-error *ngIf="vehicleForm.get('tower')?.hasError('required')">Torre requerida.</mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="form-group short-field">
+              <mat-label># Apartamento</mat-label>
+              <input matInput formControlName="apartment" [readonly]="residentFound && !isEditMode">
+            </mat-form-field>
+          </div>
+  
+          <mat-form-field appearance="outline" class="form-group full-width-group" *ngIf="!residentFound || isEditMode">
+              <mat-label>Correo Electrónico del Residente</mat-label>
+              <input matInput type="email" formControlName="ownerEmail" [readonly]="residentFound && !isEditMode">
+              <mat-error *ngIf="vehicleForm.get('ownerEmail')?.hasError('email')">Correo inválido.</mat-error>
+          </mat-form-field>
+  
+          <mat-divider class="section-divider" *ngIf="!residentFound || isEditMode"></mat-divider>
+  
+          <!-- El resto del formulario de Datos del Vehículo permanece igual -->
+          <h3 class="form-section-title">Datos del Vehículo</h3>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Placa del Vehículo</mat-label>
+              <input matInput formControlName="plate" required placeholder="ABC-123" (input)="toUpperCase($event, 'plate')">
+              <mat-error *ngIf="vehicleForm.get('plate')?.hasError('required')">Placa requerida.</mat-error>
+              <mat-error *ngIf="vehicleForm.get('plate')?.hasError('pattern')">Formato de placa inválido.</mat-error>
+            </mat-form-field>
+  
+            <div class="form-group">
+              <label id="vehicle-type-radio-group-label" class="mat-label">Tipo de Vehículo</label>
+              <mat-radio-group aria-labelledby="vehicle-type-radio-group-label" class="radio-group-mat" formControlName="type" required>
+                <mat-radio-button *ngFor="let type of availableVehicleTypes" [value]="type.value" class="radio-button-mat">
+                  {{ type.viewValue }}
+                </mat-radio-button>
+              </mat-radio-group>
+              <mat-error *ngIf="vehicleForm.get('type')?.hasError('required') && vehicleForm.get('type')?.touched">
+                Tipo de vehículo requerido.
+              </mat-error>
+            </div>
+          </div>
+  
+          <div class="form-row">
+              <mat-form-field appearance="outline" class="form-group">
+                  <mat-label>Marca (Opcional)</mat-label>
+                  <input matInput formControlName="brand">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="form-group">
+                  <mat-label>Modelo (Opcional)</mat-label>
+                  <input matInput formControlName="model">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="form-group">
+                  <mat-label>Color (Opcional)</mat-label>
+                  <input matInput formControlName="color">
+              </mat-form-field>
+          </div>
+  
+          <div class="form-row">
+             <mat-form-field appearance="outline" class="form-group">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="status" required>
+                <mat-option value="activo">Activo</mat-option>
+                <mat-option value="inactivo">Inactivo</mat-option>
+              </mat-select>
+              <mat-error *ngIf="vehicleForm.get('status')?.hasError('required')">Estado requerido.</mat-error>
+            </mat-form-field>
+          </div>
+  
+  
+          <div class="button-container">
+            <button mat-stroked-button type="button" (click)="onCancel()" class="cancel-button">Cancelar</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="vehicleForm.invalid || isLoading || (!residentFound && !isEditMode)" class="submit-button-mat">
+              <span *ngIf="!isLoading">{{ isEditMode ? 'Actualizar Vehículo' : 'Guardar Vehículo' }}</span>
+              <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24" class="submit-spinner"></mat-progress-spinner>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
