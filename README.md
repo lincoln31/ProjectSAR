@@ -1,27 +1,58 @@
-# AministracionResidencial
+# Residential Administration Angular App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.9.
+## Description
 
-## Development server
+This project is an Angular application designed for residential administration. It provides a platform to manage various aspects of a residential complex, including resident information, access control, payments, and property details.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Features
 
-## Code scaffolding
+*   **Authentication:** Secure user login and registration.
+*   **Dashboard:** An overview of key information and statistics.
+*   **User Management:** Manage resident and administrator accounts.
+*   **Property Management:** Keep track of properties within the complex.
+*   **Access Control:** Manage access permissions for residents and vehicles.
+*   **Vehicle Management:** Track vehicles registered within the residential complex.
+*   **Payment Processing:** Handle payments from residents.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Prerequisites
 
-## Build
+Before you begin, ensure you have met the following requirements:
+*   Node.js (which includes npm) installed. You can download it from [https://nodejs.org/](https://nodejs.org/).
+*   Angular CLI installed globally. You can install it using npm:
+    ```bash
+    npm install -g @angular/cli
+    ```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Installation
 
-## Running unit tests
+To install the project dependencies, navigate to the project directory and run:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+npm install
+```
 
-## Running end-to-end tests
+## Running the Application
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+To start the development server, run:
 
-## Further help
+```bash
+npm start
+```
+Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Building the Application
+
+To build the project for production, run:
+
+```bash
+npm run build
+```
+The build artifacts will be stored in the `dist/` directory.
+
+## Running Tests
+
+To execute the unit tests via Karma, run:
+
+```bash
+npm test
+```
