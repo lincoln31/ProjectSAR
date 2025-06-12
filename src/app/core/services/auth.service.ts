@@ -1,97 +1,137 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core'; // AÑADE Inject, PLATFORM_ID
-import { isPlatformBrowser } from '@angular/common'; // AÑADE isPlatformBrowser
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core'; // Importa Inject y PLATFORM_ID
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { tap, catchError, delay } from 'rxjs/operators';
-// import { ApiService } from './api.service'; // Lo usaremos después
-// import { User, LoginCredentials } from '../models'; // Modelos a crear
-
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { tap, catchError, map } from 'rxjs/operators';
+import { ApiService } from './api.service';
+import {
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  MessageResponse,
+  AppUser
+} from '../models/auth.model'; // Importamos todas las interfaces necesarias
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly JWT_TOKEN = 'authToken';
+  private readonly CURRENT_USER = 'currentUser';
+
+  private isBrowser: boolean; // Para saber si estamos en el navegador
+
+  // BehaviorSubject para el estado de autenticación
   private isAuthenticatedSubject: BehaviorSubject<boolean>;
   public isAuthenticated$: Observable<boolean>;
 
-  // private currentUserSubject: BehaviorSubject<User | null>;
-  // public currentUser$: Observable<User | null>;
+  // BehaviorSubject para la información del usuario actual
+  private currentUserSubject: BehaviorSubject<AppUser | null>;
+  public currentUser$: Observable<AppUser | null>;
 
   constructor(
     private router: Router,
-    // private apiService: ApiService
-    @Inject(PLATFORM_ID) private platformId: Object // INYECTA PLATFORM_ID
+    private apiService: ApiService,
+    @Inject(PLATFORM_ID) platformId: object // Inyecta PLATFORM_ID
   ) {
-    // Inicializa el BehaviorSubject comprobando si estamos en el navegador
-    let initialAuthState = false;
-    if (isPlatformBrowser(this.platformId)) {
-      initialAuthState = this.hasTokenInBrowser();
-    }
-    this.isAuthenticatedSubject = new BehaviorSubject<boolean>(initialAuthState);
+    this.isBrowser = isPlatformBrowser(platformId); // Determina si es navegador
+
+    // Inicializa los BehaviorSubjects después de saber si es navegador
+    this.isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
     this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-    // Haz lo mismo si estás usando currentUserSubject
-    // let initialUser = null;
-    // if (isPlatformBrowser(this.platformId)) {
-    //   initialUser = this.getUserFromStorageInBrowser();
-    // }
-    // this.currentUserSubject = new BehaviorSubject<User | null>(initialUser);
-    // this.currentUser$ = this.currentUserSubject.asObservable();
+    this.currentUserSubject = new BehaviorSubject<AppUser | null>(this.getUserFromStorage());
+    this.currentUser$ = this.currentUserSubject.asObservable();
   }
 
-  // Renombra o crea un método específico para el navegador
-  private hasTokenInBrowser(): boolean {
-    return !!localStorage.getItem('authToken');
+  private hasToken(): boolean {
+    if (this.isBrowser) { // Solo accede a localStorage si es navegador
+      return !!localStorage.getItem(this.JWT_TOKEN);
+    }
+    return false; // Por defecto, no hay token en el servidor
   }
 
-  // private getUserFromStorageInBrowser(): User | null {
-  //   const user = localStorage.getItem('currentUser');
-  //   return user ? JSON.parse(user) : null;
-  // }
+  private getUserFromStorage(): AppUser | null {
+    if (this.isBrowser) { // Solo accede a localStorage si es navegador
+      const userString = localStorage.getItem(this.CURRENT_USER);
+      return userString ? JSON.parse(userString) as AppUser : null;
+    }
+    return null; // Por defecto, no hay usuario en el servidor
+  }
+  /**
+   * Procesa la respuesta de autenticación exitosa.
+   */
+  private handleAuthentication(authResponse: AuthResponse): void {
+    if (this.isBrowser) { // Solo escribe en localStorage si es navegador
+      localStorage.setItem(this.JWT_TOKEN, authResponse.accessToken);
+      const userToStore: AppUser = {
+        id: authResponse.userId,
+        username: authResponse.username,
+        email: authResponse.email,
+        roles: authResponse.roles
+      };
+      localStorage.setItem(this.CURRENT_USER, JSON.stringify(userToStore));
+    }
 
-  login(credentials: /* LoginCredentials */ any): Observable<any> {
-    return of({ token: 'mock-jwt-token', user: { id: 1, name: 'Admin User', role: 'ADMIN' } }).pipe(
-      delay(1000),
-      tap(response => {
-        if (isPlatformBrowser(this.platformId)) { // Comprueba de nuevo aquí
-          localStorage.setItem('authToken', response.token);
-          // localStorage.setItem('currentUser', JSON.stringify(response.user));
-        }
-        this.isAuthenticatedSubject.next(true);
-        // this.currentUserSubject.next(response.user);
-        this.router.navigate(['/app/dashboard']);
-      }),
-      catchError(error => {
-        this.isAuthenticatedSubject.next(false);
-        // this.currentUserSubject.next(null);
-        return throwError(() => new Error('Login fallido: ' + error.message));
-      })
-    );
+    this.isAuthenticatedSubject.next(true);
+    this.currentUserSubject.next({ // Actualiza el currentUserSubject con los datos del usuario
+        id: authResponse.userId,
+        username: authResponse.username,
+        email: authResponse.email,
+        roles: authResponse.roles
+    });
+    this.router.navigate(['/app/dashboard']);
+  }
+
+  login(credentials: LoginRequest): Observable<AuthResponse> {
+    return this.apiService.post<AuthResponse>('/api/v1/auth/login', credentials)
+      .pipe(
+        tap(response => {
+          this.handleAuthentication(response);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          this.clearAuthData(); // Limpia datos incluso si falla, por si acaso
+          return throwError(() => error);
+        })
+      );
+  }
+
+  register(userData: RegisterRequest): Observable<MessageResponse> {
+    return this.apiService.post<MessageResponse>('/api/v1/auth/register', userData)
+      .pipe(
+        tap(response => {
+          console.log('Registro exitoso:', response.message);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
   }
 
   logout(): void {
-    if (isPlatformBrowser(this.platformId)) { // Comprueba de nuevo aquí
-      localStorage.removeItem('authToken');
-      // localStorage.removeItem('currentUser');
-    }
-    this.isAuthenticatedSubject.next(false);
-    // this.currentUserSubject.next(null);
+    this.clearAuthData();
     this.router.navigate(['/auth/login']);
   }
 
-  // Este método ya no se usa para la inicialización directa del BehaviorSubject
-  // pero puede ser útil en otros lugares si se llama desde el contexto del navegador.
-  // Si solo se usa internamente y siempre después de una comprobación de plataforma, está bien.
-  // Si no, también debería tener la comprobación.
-  // Por seguridad, lo dejamos aquí por si se llama desde otro lado,
-  // aunque es mejor usar los métodos específicos "InBrowser" o comprobar antes de llamar.
-  private hasToken(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
-      return !!localStorage.getItem('authToken');
+  private clearAuthData(): void {
+    if (this.isBrowser) { // Solo accede a localStorage si es navegador
+      localStorage.removeItem(this.JWT_TOKEN);
+      localStorage.removeItem(this.CURRENT_USER);
     }
-    return false; // Devuelve un valor por defecto si no está en el navegador
+    this.isAuthenticatedSubject.next(false);
+    this.currentUserSubject.next(null);
   }
 
-  // ... (resto de tus métodos, asegurándote de que cualquier acceso a localStorage
-  //      esté protegido por isPlatformBrowser si puede ser llamado desde el servidor)
+  getToken(): string | null {
+    if (this.isBrowser) { // Solo accede a localStorage si es navegador
+      return localStorage.getItem(this.JWT_TOKEN);
+    }
+    return null;
+  }
+
+  getCurrentUser(): AppUser | null {
+    // Devuelve el valor actual del BehaviorSubject, que ya considera si es browser o no en su inicialización
+    return this.currentUserSubject.value;
+  }
 }

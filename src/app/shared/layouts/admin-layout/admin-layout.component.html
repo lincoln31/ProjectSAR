@@ -10,8 +10,12 @@
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/app/users/profile">
+        <mat-icon>person</mat-icon>
+        <span>Mi Perfil</span>
+      </button>
       <button mat-menu-item (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
+          <mat-icon>exit_to_app</mat-icon>
         <span>Cerrar Sesión</span>
       </button>
     </mat-menu>

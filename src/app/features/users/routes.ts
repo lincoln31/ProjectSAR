@@ -1,5 +1,6 @@
 // src/app/features/users/routes.ts
 import { Routes } from '@angular/router';
+import { UserProfileComponent } from './components/user-profile/user-profile.component'; 
 
 export const USER_ROUTES: Routes = [
   {
@@ -21,7 +22,14 @@ export const USER_ROUTES: Routes = [
     path: 'profile/:id', // Vista de perfil de usuario (opcional, si es diferente al formulario de edición)
     loadComponent: () => import('./components/user-profile/user-profile.component').then(c => c.UserProfileComponent), // Necesitarías crear este componente
     title: 'Perfil de Usuario'
-  }
+  },
+  {
+    path: 'profile', // Ruta para que el usuario vea su propio perfil
+    component: UserProfileComponent, // Usar el componente directamente si es standalone
+    // loadComponent: () => import('./components/user-profile/user-profile.component').then(c => c.UserProfileComponent), // Alternativa
+    title: 'Mi Perfil'
+  },
+  
   // Podrías tener rutas específicas para 'tenants' o 'owners' si la lógica es muy diferente
   // o manejarlos como parte del 'user-list' y 'user-form' con filtros o tipos.
 ];

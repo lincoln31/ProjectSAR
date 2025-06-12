@@ -13,7 +13,9 @@
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form-actual">
           <mat-form-field appearance="outline" class="full-width-field">
             <mat-label>Usuario</mat-label>
-            <input matInput formControlName="username" id="username" required>
+            <input matInput formControlName="usernameOrEmail" id="usernameOrEmail" required>
+
+            
             <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
               El usuario es requerido
             </mat-error>

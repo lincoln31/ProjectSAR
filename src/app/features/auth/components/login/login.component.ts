@@ -1,7 +1,8 @@
+// src/app/features/auth/components/login/login.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common'; // Para *ngIf, *ngFor
+// import { Router, RouterModule } from '@angular/router'; // RouterModule no se usa aquí directamente, Router tampoco si AuthService maneja la redirección
+import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 // Angular Material Modules
@@ -9,16 +10,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'; // Para notificaciones
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AuthService } from '../../../../core/services/auth.service';
+import { LoginRequest } from '../../../../core/models/auth.model'; // Asegúrate de importar LoginRequest
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
+    // RouterModule, // No es necesario aquí si no hay routerLink directos en el template
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -30,58 +32,47 @@ import { AuthService } from '../../../../core/services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  loginForm!: FormGroup; // El ! indica que se inicializará en ngOnInit
-  isLoading = false;
+  loginForm!: FormGroup; // Declarar la propiedad
+  isLoading: boolean = false; // Declarar e inicializar la propiedad
   private authSubscription: Subscription | undefined;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.email]], // Ejemplo: añadir validador de email
-      password: ['', [Validators.required, Validators.minLength(6)]] // Ejemplo: mínimo 6 caracteres
+      usernameOrEmail: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
   }
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      // Marcar todos los campos como tocados para mostrar errores si es necesario
       this.loginForm.markAllAsTouched();
       return;
     }
 
     this.isLoading = true;
-    const credentials = this.loginForm.value;
+    const credentials = this.loginForm.value as LoginRequest;
 
-    // Usamos el mock del AuthService por ahora
     this.authSubscription = this.authService.login(credentials).subscribe({
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
-        // La navegación ya la maneja el AuthService en su mock
-        // this.router.navigate(['/app/dashboard']);
-        this.snackBar.open('Login exitoso!', 'Cerrar', {
-          duration: 3000,
-          panelClass: ['success-snackbar'] // Clase para estilizar (opcional)
-        });
+        // El AuthService maneja la redirección y el estado.
+        // Podrías mostrar un snackbar de éxito aquí si lo deseas, aunque AuthService podría hacerlo.
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('Error en el login:', error);
-        this.snackBar.open('Error en el login: Usuario o contraseña incorrectos.', 'Cerrar', {
-          duration: 5000,
-          panelClass: ['error-snackbar'] // Clase para estilizar (opcional)
-        });
+        console.error('Error en el componente de login:', error);
+        // El ErrorInterceptor ya debería mostrar el snackbar de error.
       }
     });
   }
 
   ngOnDestroy(): void {
-    // Desuscribirse para evitar fugas de memoria
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
